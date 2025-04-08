@@ -42,13 +42,14 @@ public class AuthController {
             String picture = principal.getAttribute("picture");
             String userId = principal.getName();
 
-            User user = User.builder()
-                    .userId(userId)
-                    .email(email)
-                    .name(name)
-                    .picture(picture)
-                    .authProvider("google")
-                    .build();
+            User user =
+                    User.builder()
+                            .userId(userId)
+                            .email(email)
+                            .name(name)
+                            .picture(picture)
+                            .authProvider("google")
+                            .build();
 
             if (!userRepository.existsById(userId)) {
                 System.out.println("User not found, creating new user");

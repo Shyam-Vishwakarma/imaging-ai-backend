@@ -16,6 +16,7 @@ public class Style {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long styleId;
+
     private String name;
     private String description;
     private String prompt;

@@ -19,6 +19,7 @@ public class WalletHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+
     private String userId;
     private double changeInCredits;
     private CreditsChangeType changeType;

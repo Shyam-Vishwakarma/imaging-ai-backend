@@ -5,9 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Getter
@@ -18,16 +17,13 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageId;
+
     private String userId;
-    @Setter
-    private String imageUrl;
-    @Setter
-    private String generatedImageUrl;
+    @Setter private String imageUrl;
+    @Setter private String generatedImageUrl;
     private String styleId;
-    @Setter
-    private ImageStatus status;
+    @Setter private ImageStatus status;
 
     private LocalDateTime createdAt;
-    @Setter
-    private LocalDateTime updatedAt;
+    @Setter private LocalDateTime updatedAt;
 }

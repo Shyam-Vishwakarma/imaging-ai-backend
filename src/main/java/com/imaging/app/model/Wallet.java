@@ -4,9 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Getter
@@ -17,11 +16,10 @@ public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String walletId;
+
     private String userId;
-    @Setter
-    private double credits;
+    @Setter private double credits;
 
     private LocalDateTime createdAt;
-    @Setter
-    private LocalDateTime updatedAt;
+    @Setter private LocalDateTime updatedAt;
 }

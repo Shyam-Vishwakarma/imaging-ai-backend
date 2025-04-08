@@ -17,19 +17,15 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Setter
-    private String name;
+    @Setter private String name;
 
-    @Setter
-    private String picture;
-
+    @Setter private String picture;
 
     private String authProvider;
 
     private LocalDateTime createdAt;
 
-    @Setter
-    private LocalDateTime updatedAt;
+    @Setter private LocalDateTime updatedAt;
 
     @Override
     public boolean equals(Object o) {
