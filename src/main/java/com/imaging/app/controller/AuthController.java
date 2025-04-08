@@ -1,11 +1,14 @@
 package com.imaging.app.controller;
 
+import com.imaging.app.dto.UserDto;
+import com.imaging.app.mapper.UserMapper;
 import com.imaging.app.model.User;
-import com.imaging.app.repository.UserRepository;
 import com.imaging.app.security.JwtUtil;
+import com.imaging.app.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,18 +17,19 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final JwtUtil jwtUtil;
 
     @Value("${allowed-origins}")
     private String frontendUrl;
 
     @Autowired
-    public AuthController(UserRepository userRepository, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
+        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -37,28 +41,17 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
             }
 
-            String email = principal.getAttribute("email");
-            String name = principal.getAttribute("name");
-            String picture = principal.getAttribute("picture");
-            String userId = principal.getName();
+            UserDto userDto = new UserMapper().toUserDto(principal);
+            System.out.println(userService.userExists(userDto.getUserId()));
 
-            User user =
-                    User.builder()
-                            .userId(userId)
-                            .email(email)
-                            .name(name)
-                            .picture(picture)
-                            .authProvider("google")
-                            .build();
+            if (!userService.userExists(userDto.getUserId())) {
+                userDto.setAuthProvider("google");
+                userService.createUser(userDto);
+            }
 
-            if (!userRepository.existsById(userId)) {
-                System.out.println("User not found, creating new user");
-                userRepository.save(user);
-            } else System.out.println("Existing user found");
+            String token = jwtUtil.generateToken(userDto.getUserId(), userDto.getName());
 
-            String token = jwtUtil.generateToken(userId, name);
-
-            Cookie cookie = new Cookie("jwt_token", token);
+            Cookie cookie = new Cookie("imaging-jwt", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
@@ -69,20 +62,20 @@ public class AuthController {
             return null;
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Authentication error: " + e.getMessage());
+                    .body("An error occurred during authentication");
         }
     }
 
     @GetMapping("/user")
     public ResponseEntity<?> getCurrentUser(
-            @CookieValue(name = "jwt_token", required = false) String token) {
+            @CookieValue(name = "imaging-jwt", required = false) String token) {
         if (token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
         }
 
         try {
             String userId = jwtUtil.extractUserId(token);
-            Optional<User> user = userRepository.findById(userId);
+            Optional<User> user = userService.findById(userId);
             if (user.isPresent()) return ResponseEntity.ok(user.get());
             else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
 
@@ -93,7 +86,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("jwt_token", null);
+        Cookie cookie = new Cookie("imaging-jwt", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
