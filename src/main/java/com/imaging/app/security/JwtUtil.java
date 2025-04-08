@@ -20,11 +20,6 @@ public class JwtUtil {
     @Value("${app.jwt.expiration}")
     private long expiration;
 
-    public JwtUtil() {
-        System.out.println("Secret: " + secret);
-        System.out.println("Expiration: " + expiration);
-    }
-
     private SecretKey getSigningKey() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
