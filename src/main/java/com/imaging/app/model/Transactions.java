@@ -14,7 +14,7 @@ import lombok.*;
 @Builder
 public class Transactions {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String transactionId;
 
     private String userId;

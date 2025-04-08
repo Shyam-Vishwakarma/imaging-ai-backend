@@ -15,8 +15,8 @@ import lombok.*;
 @Builder
 public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long imageId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String imageId;
 
     private String userId;
     @Setter private String imageUrl;

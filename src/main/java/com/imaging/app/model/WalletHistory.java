@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class WalletHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     private String userId;

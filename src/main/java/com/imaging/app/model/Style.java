@@ -14,8 +14,8 @@ import lombok.*;
 @Setter
 public class Style {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long styleId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String styleId;
 
     private String name;
     private String description;
