@@ -2,7 +2,6 @@ package com.imaging.app.service;
 
 import com.imaging.app.model.User;
 import com.imaging.app.repository.UserRepository;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,13 +15,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.get().getUserId())
-                    .password(user.get().getPassword())
-                    .build();
-        }
-        throw new UsernameNotFoundException("User not found with id: " + userId);
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUserId())
+                .password(user.getPassword())
+                .build();
     }
 }

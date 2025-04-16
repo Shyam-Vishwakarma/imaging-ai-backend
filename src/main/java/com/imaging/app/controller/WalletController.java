@@ -2,6 +2,7 @@ package com.imaging.app.controller;
 
 import com.imaging.app.exception.WalletNotFoundException;
 import com.imaging.app.model.Wallet;
+import com.imaging.app.security.AuthUtils;
 import com.imaging.app.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class WalletController {
 
     @GetMapping
     public ResponseEntity<Wallet> getWallet(@RequestParam String userId) {
+        AuthUtils.verifyUserAccess(userId);
         Wallet wallet = walletService.getWallet(userId);
         if (wallet == null) {
             throw new WalletNotFoundException(userId);
@@ -23,6 +25,7 @@ public class WalletController {
 
     @GetMapping("/credits")
     public ResponseEntity<?> getCredits(@RequestParam String userId) {
+        AuthUtils.verifyUserAccess(userId);
         double credits = walletService.getCredit(userId);
         return ResponseEntity.ok(credits);
     }
