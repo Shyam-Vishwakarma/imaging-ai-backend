@@ -14,6 +14,5 @@ public class AuthUtils {
             throw new AccessDeniedException(
                     "Provide userId is different from authorized in userId");
         }
-        ;
     }
 }
