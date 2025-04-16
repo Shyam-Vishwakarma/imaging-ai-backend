@@ -1,5 +1,6 @@
 package com.imaging.app.service;
 
+import com.imaging.app.exception.CustomIllegalArgumentException;
 import com.imaging.app.model.Wallet;
 import com.imaging.app.repository.WalletRepository;
 import java.time.LocalDateTime;
@@ -41,8 +42,10 @@ public class WalletServiceImpl implements WalletService {
     public void updateWallet(String userId, Wallet wallet) {
         Wallet existingWallet = walletRepository.findByUserId(userId);
         if (existingWallet == null || !existingWallet.getUserId().equals(wallet.getUserId())) {
-            throw new IllegalArgumentException("UserId mismatch or wallet not found for the given userId.");
+            throw new CustomIllegalArgumentException(
+                    "UserId mismatch or wallet not found for the given userId.");
         }
+        walletRepository.save(wallet);
     }
 
     @Override
