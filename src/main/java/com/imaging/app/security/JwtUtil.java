@@ -50,9 +50,8 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String userId, String name) {
+    public String generateToken(String userId) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("name", name);
         return createToken(claims, userId);
     }
 
@@ -62,12 +61,12 @@ public class JwtUtil {
                 .subject(subject)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .signWith(getSigningKey())
                 .compact();
     }
 
-    public Boolean validateToken(String token, String userId) {
-        final String extractedUserId = extractUserId(token);
-        return (extractedUserId.equals(userId) && !isTokenExpired(token));
+    public Boolean validateToken(String token) {
+        Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
+        return true;
     }
 }
