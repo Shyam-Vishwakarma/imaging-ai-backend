@@ -39,7 +39,10 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public void updateWallet(String userId, Wallet wallet) {
-        walletRepository.save(wallet);
+        Wallet existingWallet = walletRepository.findByUserId(userId);
+        if (existingWallet == null || !existingWallet.getUserId().equals(wallet.getUserId())) {
+            throw new IllegalArgumentException("UserId mismatch or wallet not found for the given userId.");
+        }
     }
 
     @Override
