@@ -23,6 +23,8 @@ public class User {
 
     private String authProvider;
 
+    @Setter String password;
+
     private LocalDateTime createdAt;
 
     @Setter private LocalDateTime updatedAt;

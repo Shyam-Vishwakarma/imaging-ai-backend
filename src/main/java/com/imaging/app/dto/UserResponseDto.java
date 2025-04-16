@@ -7,10 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserDto {
+public class UserResponseDto {
     private String userId;
     private String email;
     private String name;
     private String picture;
-    private String authProvider;
 }
