@@ -16,8 +16,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getUser(@RequestParam String userId) {
-        AuthUtils.verifyUserAccess(userId);
+    public ResponseEntity<?> getUser() {
+        String userId = AuthUtils.getAuthenticatedUserId();
         User user =
                 userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         return ResponseEntity.ok(UserMapper.toUserResponseDto(user));
