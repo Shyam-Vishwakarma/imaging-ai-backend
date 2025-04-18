@@ -56,7 +56,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         if (!userService.userExists(userId)) {
             log.info("User not found in the database. Creating a new user.");
-            user.setPassword(UUID.randomUUID().toString());
+            user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
             user.setUpdatedAt(LocalDateTime.now());
             userService.createUser(user);
         }
