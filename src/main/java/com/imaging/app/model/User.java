@@ -21,8 +21,6 @@ public class User {
 
     @Setter private String picture;
 
-    private String authProvider;
-
     @Setter String password;
 
     private LocalDateTime createdAt;

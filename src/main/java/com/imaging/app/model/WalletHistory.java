@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -21,7 +23,7 @@ public class WalletHistory {
     private String id;
 
     private String userId;
-    private double changeInCredits;
+    private Double changeInCredits;
     private CreditsChangeType changeType;
-    private String createdAt;
+    private LocalDateTime createdAt;
 }
