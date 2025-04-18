@@ -1,9 +1,10 @@
 package com.imaging.app.service;
 
-import com.imaging.app.exception.CustomIllegalArgumentException;
+import com.imaging.app.exception.WalletNotFoundException;
 import com.imaging.app.model.Wallet;
 import com.imaging.app.repository.WalletRepository;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,18 +34,17 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet getWallet(String userId) {
+    public Optional<Wallet> getWallet(String userId) {
         return walletRepository.findByUserId(userId);
     }
 
     @Override
     @Transactional
     public void updateWallet(String userId, Wallet wallet) {
-        Wallet existingWallet = walletRepository.findByUserId(userId);
-        if (existingWallet == null || !existingWallet.getUserId().equals(wallet.getUserId())) {
-            throw new CustomIllegalArgumentException(
-                    "UserId mismatch or wallet not found for the given userId.");
-        }
+        Wallet existingWallet =
+                walletRepository
+                        .findByUserId(userId)
+                        .orElseThrow(() -> new WalletNotFoundException(userId));
         walletRepository.save(wallet);
     }
 
@@ -54,7 +54,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public double getCredit(String userId) {
+    public Optional<Double> getCredit(String userId) {
         return walletRepository.getCreditByUserId(userId);
     }
 }

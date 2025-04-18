@@ -15,18 +15,19 @@ public class WalletController {
     private final WalletService walletService;
 
     @GetMapping
-    public ResponseEntity<Wallet> getWallet(@RequestParam String userId) {
-        AuthUtils.verifyUserAccess(userId);
-        Wallet wallet = walletService.getWallet(userId);
-        if (wallet == null) {
-            throw new WalletNotFoundException(userId);
-        } else return ResponseEntity.ok(wallet);
+    public ResponseEntity<Wallet> getWallet() {
+        String userId = AuthUtils.getAuthenticatedUserId();
+        Wallet wallet =
+                walletService
+                        .getWallet(userId)
+                        .orElseThrow(() -> new WalletNotFoundException(userId));
+        return ResponseEntity.ok(wallet);
     }
 
     @GetMapping("/credits")
-    public ResponseEntity<?> getCredits(@RequestParam String userId) {
-        AuthUtils.verifyUserAccess(userId);
-        double credits = walletService.getCredit(userId);
+    public ResponseEntity<Double> getCredits() {
+        String userId = AuthUtils.getAuthenticatedUserId();
+        Double credits = walletService.getCredit(userId).orElse(0.0);
         return ResponseEntity.ok(credits);
     }
 }
