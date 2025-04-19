@@ -1,5 +1,6 @@
 package com.imaging.app.service;
 
+import com.imaging.app.dto.WalletHistoryResponseDto;
 import com.imaging.app.enums.CreditsChangeType;
 import com.imaging.app.model.WalletHistory;
 import com.imaging.app.repository.WalletHistoryRepository;
@@ -32,12 +33,16 @@ public class WalletHistoryServiceImpl implements WalletHistoryService {
     }
 
     @Override
-    public List<WalletHistory> getWalletHistory(String userId) {
-        return walletHistoryRepository.findByUserId(userId);
+    public List<WalletHistoryResponseDto> getWalletHistory(String userId) {
+        List<WalletHistory> walletHistories = walletHistoryRepository.findByUserId(userId);
+        return walletHistories.stream().map(WalletHistoryResponseDto.Mapper::toDto).toList();
     }
 
     @Override
-    public List<WalletHistory> getWalletHistoryByType(String userId, CreditsChangeType changeType) {
-        return walletHistoryRepository.findByUserIdAndChangeType(userId, changeType);
+    public List<WalletHistoryResponseDto> getWalletHistoryByType(
+            String userId, CreditsChangeType changeType) {
+        List<WalletHistory> walletHistories =
+                walletHistoryRepository.findByUserIdAndChangeType(userId, changeType);
+        return walletHistories.stream().map(WalletHistoryResponseDto.Mapper::toDto).toList();
     }
 }
