@@ -45,7 +45,7 @@ public class WalletServiceImpl implements WalletService {
                 walletRepository
                         .findByUserId(userId)
                         .orElseThrow(() -> new WalletNotFoundException(userId));
-        if(userId.equals(existingWallet.getUserId())) {
+        if (userId.equals(existingWallet.getUserId())) {
             walletRepository.save(wallet);
         }
     }
